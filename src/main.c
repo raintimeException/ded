@@ -275,7 +275,7 @@ int main(int argc, char **argv)
                     }
                     break;
 
-                    case SDLK_F3: {
+                    case SDLK_e: {      // E -> explore (seems to be more intuitive to me
                         file_browser = true;
                     }
                     break;
