@@ -22,6 +22,9 @@
 #include "./lexer.h"
 #include "./sv.h"
 
+#define BG_COLOR        0x110022FF
+#define TAB_NUM_SPACES  8
+
 // TODO: Save file dialog
 // Needed when ded is ran without any file so it does not know where to save.
 
@@ -328,7 +331,7 @@ int main(int argc, char **argv)
                         // - tabs/spaces
                         // - tab width
                         // - etc.
-                        for (size_t i = 0; i < 4; ++i) {
+                        for (size_t i = 0; i < TAB_NUM_SPACES; ++i) {
                             editor_insert_char(&editor, ' ');
                         }
                     }
@@ -420,7 +423,7 @@ int main(int argc, char **argv)
             glViewport(0, 0, w, h);
         }
 
-        Vec4f bg = hex_to_vec4f(0x181818FF);
+        Vec4f bg = hex_to_vec4f(BG_COLOR);
         glClearColor(bg.x, bg.y, bg.z, bg.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
