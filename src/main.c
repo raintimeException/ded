@@ -275,8 +275,10 @@ int main(int argc, char **argv)
                     }
                     break;
 
-                    case SDLK_e: {      // E -> explore (seems to be more intuitive to me
-                        file_browser = true;
+                    case SDLK_e: {      // Ctrl + e -> explore (seems to be more intuitive to me
+                        if (event.key.keysym.mod & KMOD_CTRL) {
+                                file_browser = true;
+                        }
                     }
                     break;
 
