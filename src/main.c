@@ -161,6 +161,7 @@ int main(int argc, char **argv)
 
     editor.atlas = &atlas;
     editor_retokenize(&editor);
+    editor.in_visual_mod = true;
 
     bool quit = false;
     bool file_browser = false;
@@ -182,12 +183,12 @@ int main(int argc, char **argv)
                     }
                     break;
 
-                    case SDLK_UP: {
+                    case SDLK_k: {
                         if (fb.cursor > 0) fb.cursor -= 1;
                     }
                     break;
 
-                    case SDLK_DOWN: {
+                    case SDLK_j: {
                         if (fb.cursor + 1 < fb.files.count) fb.cursor += 1;
                     }
                     break;
@@ -313,6 +314,14 @@ int main(int argc, char **argv)
                     case SDLK_ESCAPE: {
                         editor_stop_search(&editor);
                         editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
+                        editor.in_visual_mod = true;
+                    }
+                    break;
+
+                    case SDLK_i: {
+                        if (event.key.keysym.mod & KMOD_CTRL) {
+                            editor.in_visual_mod = false;
+                        }
                     }
                     break;
 
@@ -353,47 +362,55 @@ int main(int argc, char **argv)
                     }
                     break;
 
-                    case SDLK_UP: {
-                        editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
-                        if (event.key.keysym.mod & KMOD_CTRL) {
-                            editor_move_paragraph_up(&editor);
-                        } else {
-                            editor_move_line_up(&editor);
+                    case SDLK_k: {
+                        if (editor.in_visual_mod) {
+                            editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
+                            if (event.key.keysym.mod & KMOD_CTRL) {
+                                editor_move_paragraph_up(&editor);
+                            } else {
+                                editor_move_line_up(&editor);
+                            }
+                            editor.last_stroke = SDL_GetTicks();
                         }
-                        editor.last_stroke = SDL_GetTicks();
                     }
                     break;
 
-                    case SDLK_DOWN: {
-                        editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
-                        if (event.key.keysym.mod & KMOD_CTRL) {
-                            editor_move_paragraph_down(&editor);
-                        } else {
-                            editor_move_line_down(&editor);
+                    case SDLK_j: {
+                        if (editor.in_visual_mod) {
+                            editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
+                            if (event.key.keysym.mod & KMOD_CTRL) {
+                                editor_move_paragraph_down(&editor);
+                            } else {
+                                editor_move_line_down(&editor);
+                            }
+                            editor.last_stroke = SDL_GetTicks();
                         }
-                        editor.last_stroke = SDL_GetTicks();
                     }
                     break;
 
-                    case SDLK_LEFT: {
-                        editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
-                        if (event.key.keysym.mod & KMOD_CTRL) {
-                            editor_move_word_left(&editor);
-                        } else {
-                            editor_move_char_left(&editor);
+                    case SDLK_h: {
+                        if (editor.in_visual_mod) {
+                            editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
+                            if (event.key.keysym.mod & KMOD_CTRL) {
+                                editor_move_word_left(&editor);
+                            } else {
+                                editor_move_char_left(&editor);
+                            }
+                            editor.last_stroke = SDL_GetTicks();
                         }
-                        editor.last_stroke = SDL_GetTicks();
                     }
                     break;
 
-                    case SDLK_RIGHT: {
-                        editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
-                        if (event.key.keysym.mod & KMOD_CTRL) {
-                            editor_move_word_right(&editor);
-                        } else {
-                            editor_move_char_right(&editor);
+                    case SDLK_l: {
+                        if (editor.in_visual_mod) {
+                            editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
+                            if (event.key.keysym.mod & KMOD_CTRL) {
+                                editor_move_word_right(&editor);
+                            } else {
+                                editor_move_char_right(&editor);
+                            }
+                            editor.last_stroke = SDL_GetTicks();
                         }
-                        editor.last_stroke = SDL_GetTicks();
                     }
                     break;
                     }
@@ -402,7 +419,7 @@ int main(int argc, char **argv)
             break;
 
             case SDL_TEXTINPUT: {
-                if (file_browser) {
+                if (file_browser || editor.in_visual_mod) {
                     // Nothing for now
                     // Once we have incremental search in the file browser this may become useful
                 } else {
