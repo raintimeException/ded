@@ -237,7 +237,7 @@ int main(int argc, char **argv)
                     }
                 } else {
                     switch (event.key.keysym.sym) {
-                    case SDLK_HOME: {
+                    case SDLK_0: {
                         editor_update_selection(&editor, event.key.keysym.mod & KMOD_SHIFT);
                         if (event.key.keysym.mod & KMOD_CTRL) {
                             editor_move_to_begin(&editor);
